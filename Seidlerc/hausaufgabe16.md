@@ -129,5 +129,239 @@ ggplot(diamonds, aes(x = carat, y = price, color = color)) + geom_point() +
 # Noch eine Überlegung
 Haben Sie dabei explorativ oder konfirmativ gearbeitet? Was hat das für eine Auswirkung auf die Interpretation der Ergebnisse?
 
+
+#Analyse
+
+1) Was bestimmt den Preis eines Diamanten?
+- Überlegung: Je mehr Karat ein Diamat hat, umso teurer ist er. Farbe, Schliff und Reinheit haben ebeso Auswirkungen auf den Preis 
+
+--> plotten
+
+
+```r
+ggplot(diamonds, aes(x = carat, y = price)) + geom_point()
+```
+
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-51.png) 
+
+```r
+ggplot(diamonds, aes(x = carat, y = price, color = color)) + geom_point(alpha = 0.5)
+```
+
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-52.png) 
+
+```r
+ggplot(diamonds, aes(x = carat, y = price, color = cut)) + geom_point(alpha = 0.5)
+```
+
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-53.png) 
+
+```r
+ggplot(diamonds, aes(x = carat, y = price, color = clarity)) + geom_point(alpha = 0.5)
+```
+
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-54.png) 
+
+
+--> Lineare Regression um die Beziehung von Karat und Preis darzustellen
+
+
+```r
+ggplot(diamonds, aes(x = carat, y = price)) + geom_point() + geom_smooth(method = "lm")
+```
+
+![plot of chunk unnamed-chunk-6](figure/unnamed-chunk-6.png) 
+
+/ log. Skalen
+
+
+```r
+ggplot(diamonds, aes(x = carat, y = price)) + geom_point() + geom_smooth(method = "lm") + 
+    scale_x_log10() + scale_y_log10()
+```
+
+![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7.png) 
+
+
+Mit einer linearen Regression kann statistisch nachvollzogen werden, ob Karat ein Prädikator für den Preis ist.
+
+
+```r
+summary(lm(price ~ carat, diamonds))
+```
+
+```
+## 
+## Call:
+## lm(formula = price ~ carat, data = diamonds)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -18585   -805    -19    537  12732 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)  -2256.4       13.1    -173   <2e-16 ***
+## carat         7756.4       14.1     551   <2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1550 on 53938 degrees of freedom
+## Multiple R-squared:  0.849,	Adjusted R-squared:  0.849 
+## F-statistic: 3.04e+05 on 1 and 53938 DF,  p-value: <2e-16
+```
+
+
+Abhängigkeit von Preis und Karakt ist signifikaten mit einem R^2 von 84.93% der Formel "price = -2256.4 + carat * 7756.4"
+
+Damit ist nicht alle Varianz erklärt, denn der Preis eines Diamanten hängt nicht nur von dessen Karat ab.
+Die log. Transformation der Daten erzeugt ein Modell mit einem noch besseren Fit, daher gibt es eher einen exponentiellen statt einem linearen Zusammenhang:
+
+
+```r
+summary(lm(log10(price) ~ log10(carat), diamonds))
+```
+
+```
+## 
+## Call:
+## lm(formula = log10(price) ~ log10(carat), data = diamonds)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -0.6551 -0.0736 -0.0026  0.0723  0.5811 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)  3.669207   0.000593    6191   <2e-16 ***
+## log10(carat) 1.675817   0.001934     867   <2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.114 on 53938 degrees of freedom
+## Multiple R-squared:  0.933,	Adjusted R-squared:  0.933 
+## F-statistic: 7.51e+05 on 1 and 53938 DF,  p-value: <2e-16
+```
+
+
+Problem: Farbe, Schliff und Reinheit sind nicht numerisch skaliert, sodass eine lineare Regression nicht möglich ist. Die Hypothese, dass der Karatwert (=Gewicht des Diamanten x*0,2=xGramm) vom Volumen abhängt lässt sich bestätigen:
+
+
+```r
+summary(lm(carat ~ x + y + z, diamonds))
+```
+
+```
+## 
+## Call:
+## lm(formula = carat ~ x + y + z, data = diamonds)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -2.281 -0.070 -0.028  0.059  3.817 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept) -1.56677    0.00234 -669.40   <2e-16 ***
+## x            0.35905    0.00230  156.32   <2e-16 ***
+## y            0.00515    0.00177    2.91   0.0036 ** 
+## z            0.07838    0.00267   29.40   <2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.104 on 53936 degrees of freedom
+## Multiple R-squared:  0.952,	Adjusted R-squared:  0.952 
+## F-statistic: 3.54e+05 on 3 and 53936 DF,  p-value: <2e-16
+```
+
+
+2) ANOVA
+- Überprüfung ob es einen preislichen Unterschied zwischen Farbe, Schliff und Reinheitsgraden gibt (unterschiedliche Gruppengröße=verzerrtes Ergebnis)
+
+
+```r
+summary(aov(price ~ color * cut * clarity, data = diamonds))
+```
+
+```
+##                      Df   Sum Sq  Mean Sq F value Pr(>F)    
+## color                 6 2.68e+10 4.47e+09  307.61 <2e-16 ***
+## cut                   4 9.70e+09 2.42e+09  166.69 <2e-16 ***
+## clarity               7 2.00e+10 2.86e+09  196.38 <2e-16 ***
+## color:cut            24 1.84e+09 7.65e+07    5.26  8e-16 ***
+## color:clarity        42 1.35e+10 3.22e+08   22.15 <2e-16 ***
+## cut:clarity          28 1.61e+09 5.73e+07    3.94  1e-11 ***
+## color:cut:clarity   164 4.28e+09 2.61e+07    1.79  2e-09 ***
+## Residuals         53664 7.81e+11 1.45e+07                   
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+
+-- Haupteffekte und Interaktionen sind signifikant = Auswirkung auf Preis des Diamanten
+
+ABER:
+
+- as.numeric für lineare Regression zeigt ein leicht anderes Ergebnis
+
+
+```r
+diamonds$cut.num <- as.numeric(diamonds$cut)
+diamonds$color.num <- as.numeric(diamonds$color)
+diamonds$clarity.num <- as.numeric(diamonds$clarity)
+head(diamonds)
+```
+
+```
+##   carat       cut color clarity depth table price    x    y    z cut.num
+## 1  0.23     Ideal     E     SI2  61.5    55   326 3.95 3.98 2.43       5
+## 2  0.21   Premium     E     SI1  59.8    61   326 3.89 3.84 2.31       4
+## 3  0.23      Good     E     VS1  56.9    65   327 4.05 4.07 2.31       2
+## 4  0.29   Premium     I     VS2  62.4    58   334 4.20 4.23 2.63       4
+## 5  0.31      Good     J     SI2  63.3    58   335 4.34 4.35 2.75       2
+## 6  0.24 Very Good     J    VVS2  62.8    57   336 3.94 3.96 2.48       3
+##   color.num clarity.num
+## 1         2           2
+## 2         2           3
+## 3         2           5
+## 4         6           4
+## 5         7           2
+## 6         7           6
+```
+
+```r
+
+summary(lm(price ~ carat * color.num * cut.num, data = diamonds))
+```
+
+```
+## 
+## Call:
+## lm(formula = price ~ carat * color.num * cut.num, data = diamonds)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -14010   -787    -19    636  12038 
+## 
+## Coefficients:
+##                         Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)             -2362.38     110.25  -21.43  < 2e-16 ***
+## carat                    7484.12     124.24   60.24  < 2e-16 ***
+## color.num                 -32.88      27.01   -1.22     0.22    
+## cut.num                   -68.88      26.76   -2.57     0.01 *  
+## carat:color.num          -183.98      26.87   -6.85  7.6e-12 ***
+## carat:cut.num             510.13      31.36   16.27  < 2e-16 ***
+## color.num:cut.num           9.61       6.57    1.46     0.14    
+## carat:color.num:cut.num   -34.34       6.77   -5.07  4.0e-07 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1430 on 53932 degrees of freedom
+## Multiple R-squared:  0.871,	Adjusted R-squared:  0.871 
+## F-statistic: 5.21e+04 on 7 and 53932 DF,  p-value: <2e-16
+```
+
+Aus der linearen Regression geht, im Gegensatz zur ANOVA, hervor, dass die Farbe eines Diamanten scheinbar doch keinen Einfluss auf den Preis hat. 
+
 # Lizenz
 Dieses Werk ist lizenziert unter einer CC-BY-NC-SA Lizenz.
