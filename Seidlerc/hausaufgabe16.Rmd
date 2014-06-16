@@ -138,5 +138,24 @@ ABER:
 ```
 Aus der linearen Regression geht, im Gegensatz zur ANOVA, hervor, dass die Farbe eines Diamanten scheinbar doch keinen Einfluss auf den Preis hat. 
 
+3) Inwiefern bestimmt Reinheit den Preis?
+
+```{r}
+ ggplot(diamonds, aes(x=clarity, y=price))+geom_point()
+```
+
+Reinheit hat Auswirkung auf den Preis. Die Grafik zeigt, dass ein Diamant mit der Reinheitsstufe l1 preisgünsiger ist.
+
+4) Inwiefern bestimmt der Schliff den Preis?
+
+```{r}
+ ggplot(diamonds, aes(x=cut, y=price))+geom_point()
+```
+
+Der Schliff scheint nur geringe Auswirkungen auf den Preis zu haben.
+
+--> Karatzahl wirkt sich am meisten auf den Preis aus.
+
+
 # Lizenz
 Dieses Werk ist lizenziert unter einer CC-BY-NC-SA Lizenz.
