@@ -137,7 +137,6 @@ ggplot(pyreg,aes(x=x1,y=x2)) + geom_point(aes(size=y))
 # Lineares Modell passt nicht sehr gut, da die Punkte sozusagen "kreuz und quer"
 # verteilt sind.
 
-
 # Glauben Sie jetzt, dass y im linearen Verhältnis zu x1 und x2 steht? Warum (nicht)?
 
 # Wie sieht mit Korrelationen aus? Berechnen Sie die Korrelation (sowohl Pearson
@@ -171,4 +170,3 @@ print(cor2.spearman)
 
 # Was sagt das uns über (lineare) Regression? Ist es gut, dass das
 # Regressionmodell anscheinend so gut war?
-
