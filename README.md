@@ -152,11 +152,21 @@ Woche | Datum          | Themen
 |      |                | 1. `hausaufgabe16.Rmd`
 | 10.  | **16.06.2014** | Wiederholung, implizite Darstellung des General Linear Modells (GLM)
 |      | **17.06.2014** | Korrelationen I
+<<<<<<< HEAD
 | 11.  | **23.06.2014** | Korrelationen II
 |      | **24.06.2014** | gemischte Modelle I
 | 12.  | **30.06.2014** | gemischte Modelle II
 |      | **01.07.2014** | $\chi^2$, logLikelihood & Likelihood-Ratio  
 | 13.  | **07.07.2014** | Nicht-parametrische Tests I
+=======
+|      |                | *Hausaufgabe bis 23.06.2014 12 Uhr:*
+|      |                | 1. `hausaufgabe18.R`
+| 11.  | **23.06.2014** | gemischte Modelle I
+|      | **24.06.2014** | gemischte Modelle II
+| 12.  | **30.06.2014** | $\chi^2$, logLikelihood & Likelihood-Ratio  
+|      | **01.07.2014** | Nicht-parametrische Tests I
+| 13.  | **07.07.2014** | Nicht-parametrische Tests II
+>>>>>>> 184a565cfd672cacfa786337365742397bed8970
 |      | **08.07.2014** | Experimentaldesign
 | 14.  | **14.07.2014** | Fragestunde / Puffer
 |      | **15.07.2014** | Klausur
